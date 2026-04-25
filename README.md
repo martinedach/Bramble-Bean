@@ -15,7 +15,9 @@ This repository is being built for a developer assessment. Scope, architecture, 
 
 ## Status
 
-Infra is in place: multi-stage **Dockerfile** (Vite build + FastAPI), **Compose** stack (`app` + `db`), and a minimal API with **`GET /api/health`**. Feedback persistence and **`POST /api/feedback`** are not implemented yet.
+End-to-end **customer feedback** flow: **`POST /api/feedback`** persists to PostgreSQL; the React form validates email (regex), rating (1–5), and highlight (Food / Coffee / Service / Atmosphere), then submits JSON to the API. **`GET /api/health`** remains for checks.
+
+Run the full stack with **`docker compose up --build`** (or **`make start`**) and open **http://localhost:8000**.
 
 ## Requirements
 
@@ -73,8 +75,11 @@ Copy [`.env.example`](./.env.example) to `.env` when you run the app outside Com
 
 ## Local development (without full Docker)
 
-- **Frontend:** `cd frontend && npm install && npm run dev`. Styling uses **Tailwind v4** with Pinterest-inspired design tokens; see **[frontend/DESIGN_SCHEMA.md](./frontend/DESIGN_SCHEMA.md)** and [`frontend/src/design/schema.ts`](./frontend/src/design/schema.ts).
-- **Backend:** create a virtualenv, `pip install -r backend/requirements.txt`, then from `backend/` run `uvicorn main:app --reload --port 8000`. Without a `static/` folder next to `main.py`, only API routes (for example `/api/health`) are available until you run `npm run build` in `frontend` and copy `frontend/dist` to `backend/static`, or use Docker.
+- **Database only:** `docker compose up db` (Postgres on port **5432** with user/password/db `cafe`).
+- **Backend:** from `backend/`, create a venv (Python **3.12 or 3.13** recommended), `pip install -r requirements.txt`, set `DATABASE_URL` (see [`.env.example`](./.env.example)), then `uvicorn main:app --reload --host 127.0.0.1 --port 8000`. API routes live under **`/api/*`**.
+- **Frontend:** `cd frontend && npm install && npm run dev`. Vite proxies **`/api`** to **`http://127.0.0.1:8000`**, so keep the API on port 8000 while using the dev server. Styling uses **Tailwind v4** and Pinterest-inspired tokens; see **[frontend/DESIGN_SCHEMA.md](./frontend/DESIGN_SCHEMA.md)**.
+- **API tests:** from `backend/`, `python -m pytest tests/ -v`. If `DATABASE_URL` is unset, tests use in-memory SQLite (same models; production still uses Postgres). To hit Postgres instead, export `DATABASE_URL` before pytest.
+- **Static UI from the API:** run `npm run build` in `frontend`, copy `frontend/dist` into `backend/static`, then serve with uvicorn as above, or use Docker for the combined image.
 
 ## Documentation
 

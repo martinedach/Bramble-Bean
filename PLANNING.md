@@ -125,44 +125,44 @@ Use `- [ ]` / `- [x]` in GitHub or your editor to track progress.
 
 - [x] Compose (or local) Postgres service runs with a named volume for data.
 - [x] `DATABASE_URL` (or equivalent) documented and wired into the API.
-- [ ] `feedback_submissions` table (or chosen name) matches the planned columns; rows persist across API restarts.
+- [x] `feedback_submissions` table (or chosen name) matches the planned columns; rows persist across API restarts.
 
 ### Backend (FastAPI)
 
 - [x] App boots with uvicorn; health or root check route for sanity.
-- [ ] `POST /api/feedback` accepts JSON body `{ email, comment, rating, highlight }`.
-- [ ] `201` response on success with useful body (e.g. `id`).
-- [ ] ORM/session layer inserts a row and commits; errors handled without leaking stack traces to clients in production-like mode.
+- [x] `POST /api/feedback` accepts JSON body `{ email, comment, rating, highlight }`.
+- [x] `201` response on success with useful body (e.g. `id`).
+- [x] ORM/session layer inserts a row and commits; errors handled without leaking stack traces to clients in production-like mode.
 - [x] Static files: Vite `dist/` mounted/served after build; API routes registered before static + SPA fallback if needed.
 
 ### Backend validation and errors
 
-- [ ] All four fields required on the API; missing or empty fields yield clear errors (e.g. `422` with readable messages).
-- [ ] Email validated server-side (e.g. Pydantic `EmailStr` or equivalent).
-- [ ] `rating` constrained to integers 1–5.
-- [ ] `highlight` restricted to exactly: Food, Coffee, Service, Atmosphere.
+- [x] All four fields required on the API; missing or empty fields yield clear errors (e.g. `422` with readable messages).
+- [x] Email validated server-side (regex + length via Pydantic, aligned with frontend).
+- [x] `rating` constrained to integers 1–5.
+- [x] `highlight` restricted to exactly: Food, Coffee, Service, Atmosphere.
 
 ### Frontend (React + TypeScript + Vite)
 
 - [x] Vite React TS project builds without errors (`npm run build`).
-- [ ] Form includes all four fields: email, comment, rating (1–5), highlight (single choice of four).
-- [ ] Form submits to the API (relative `/api/...` when same-origin, or configured base URL in dev).
-- [ ] Email required; **regex** validation on the client before submit (per brief).
-- [ ] Other fields required with sensible client-side checks (trim, range, enum).
-- [ ] Submit blocked or errors shown when validation fails; user can correct without losing context.
+- [x] Form includes all four fields: email, comment, rating (1–5), highlight (single choice of four).
+- [x] Form submits to the API (relative `/api/...` when same-origin, or configured base URL in dev).
+- [x] Email required; **regex** validation on the client before submit (per brief).
+- [x] Other fields required with sensible client-side checks (trim, range, enum).
+- [x] Submit blocked or errors shown when validation fails; user can correct without losing context.
 
 ### Frontend UX and robustness
 
-- [ ] Loading/disabled state on submit; no double-submit while request in flight.
-- [ ] Success feedback after a saved submission (message or inline confirmation).
-- [ ] API validation errors (`422`) surfaced in plain language (map `detail` to UI).
-- [ ] Basic accessibility: labels associated with inputs, keyboard usable, focus not trapped.
+- [x] Loading/disabled state on submit; no double-submit while request in flight.
+- [x] Success feedback after a saved submission (message or inline confirmation).
+- [x] API validation errors (`422`) surfaced in plain language (map `detail` to UI).
+- [x] Basic accessibility: labels associated with inputs, keyboard usable, focus not trapped.
 
 ### Docker and one-command run
 
 - [x] Multi-stage (or documented) build: frontend `dist/` ends up inside or next to the API image as planned.
 - [x] `compose.yaml` (or equivalent) defines **app** + **postgres**; app depends on DB healthy/ready where appropriate.
-- [ ] `docker compose up --build` (or `make start`) brings up the full stack; browser can open the app and post feedback.
+- [x] `docker compose up --build` (or `make start`) brings up the full stack; browser can open the app and post feedback.
 
 ### Makefile
 
@@ -177,8 +177,8 @@ Use `- [ ]` / `- [x]` in GitHub or your editor to track progress.
 
 ### Tests (minimal, purposeful)
 
-- [ ] At least one API test: happy path creates a row (or returns 201).
-- [ ] At least one API test: missing/invalid field returns expected status and structured error.
+- [x] At least one API test: happy path creates a row (or returns 201).
+- [x] At least one API test: missing/invalid field returns expected status and structured error.
 - [ ] Optional: small unit test for email regex or shared validation helper (only if it earns its keep).
 
 ### Submission and review signals
@@ -208,4 +208,4 @@ Use `- [ ]` / `- [x]` in GitHub or your editor to track progress.
 
 ---
 
-*Last updated: Makefile tracked in git, README Make commands table, VERSION 0.1.1.*
+*Last updated: Feedback API + form, Postgres `DATABASE_URL` in Compose, VERSION 0.3.0.*

@@ -1,3 +1,5 @@
+import { FeedbackForm } from './components/FeedbackForm'
+
 function App() {
   return (
     <div className="min-h-dvh bg-canvas text-plum">
@@ -8,26 +10,12 @@ function App() {
         <h1 className="mt-1 text-[28px] font-bold leading-none tracking-[-0.075em]">
           Share your visit
         </h1>
+        <p className="mt-3 max-w-xl text-base leading-[1.4] text-olive">
+          Tell us about your experience. All fields are required.
+        </p>
       </header>
       <main className="mx-auto max-w-lg px-6 py-10">
-        <p className="text-base leading-[1.4] text-olive">
-          The feedback form will live here. Styling uses Tailwind with a Pinterest-inspired
-          token set (warm neutrals, plum text, red primary actions).
-        </p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <button
-            type="button"
-            className="rounded-pinterest-input bg-pinterest-red px-[14px] py-[6px] text-[12px] font-normal text-ink"
-          >
-            Primary action
-          </button>
-          <button
-            type="button"
-            className="rounded-pinterest-input bg-sand-gray px-[14px] py-[6px] text-[12px] font-normal text-ink"
-          >
-            Secondary
-          </button>
-        </div>
+        <FeedbackForm />
       </main>
     </div>
   )
