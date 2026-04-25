@@ -15,11 +15,48 @@ This repository is being built for a developer assessment. Scope, architecture, 
 
 ## Status
 
-Planning and documentation only. Application code, Docker files, and run instructions will land in follow-up commits.
+Infra is in place: multi-stage **Dockerfile** (Vite build + FastAPI), **Compose** stack (`app` + `db`), and a minimal API with **`GET /api/health`**. Feedback persistence and **`POST /api/feedback`** are not implemented yet.
 
-## Running the app
+## Requirements
 
-Instructions will be added once the backend, frontend, and Compose setup exist. Until then, see **PLANNING.md** for the intended local and Docker workflows.
+- [Docker](https://docs.docker.com/get-docker/) with Compose v2 (`docker compose`)
+
+## Run with Docker Compose
+
+From the repository root:
+
+```bash
+docker compose up --build
+```
+
+Or use the Makefile:
+
+```bash
+make start
+```
+
+Then open **http://localhost:8000** for the UI (static build served by FastAPI) and **http://localhost:8000/api/health** for the health JSON.
+
+PostgreSQL is exposed on **localhost:5432** (user `cafe`, password `cafe`, database `cafe`) for local tools. These credentials are for development only.
+
+Stop the stack:
+
+```bash
+docker compose down
+# or
+make stop
+```
+
+Containers are removed; the named volume **`pgdata`** keeps database data until you remove it with `docker compose down -v`.
+
+## Configuration
+
+Copy [`.env.example`](./.env.example) to `.env` when you run the app outside Compose or need overrides. The Compose file sets `DATABASE_URL` for the `app` service automatically.
+
+## Local development (without full Docker)
+
+- **Frontend:** `cd frontend && npm install && npm run dev`
+- **Backend:** create a virtualenv, `pip install -r backend/requirements.txt`, then from `backend/` run `uvicorn main:app --reload --port 8000`. Without a `static/` folder next to `main.py`, only API routes (for example `/api/health`) are available until you run `npm run build` in `frontend` and copy `frontend/dist` to `backend/static`, or use Docker.
 
 ## Documentation
 

@@ -8,7 +8,6 @@
 | Backend | FastAPI | Clear request/response models, automatic OpenAPI docs, straightforward validation with Pydantic. |
 | Database | PostgreSQL | Fits relational feedback records; widely supported; easy to run locally via Docker. |
 
-**Does this sound good?** Yes. The brief allows any comfortable database and language; this stack is conventional, easy to run locally, and maps cleanly to “one submission = one row.” SQLite would be simpler for a toy demo, but PostgreSQL is still appropriate if we want realistic persistence and a single `docker compose` story.
 
 ## Product scope (from brief)
 
@@ -87,24 +86,14 @@ Backend remains the source of truth; frontend validation improves UX and satisfi
 4. **Docker**: Multi-stage image — stage 1 builds the frontend; stage 2 installs Python deps, copies app + `dist/`, runs uvicorn. Compose file: `app` + `postgres` (two services).
 5. **README**: Prerequisites, copy `.env.example`, document how to bring the stack up (see Makefile below); smoke-test one submission; document the dev workflow (Vite + API vs API-only + built assets).
 
-## Makefile (planned, not created yet)
+## Makefile
 
-Add a root **Makefile** as a thin wrapper over Docker Compose so reviewers (and we) can start and stop the stack without remembering flags.
+Root **Makefile** wraps Docker Compose (`compose.yaml`, `COMPOSE_PROJECT_NAME=cafe-review`).
 
-**Intent**
-
-- **`make start`** (alias **`make up`**) — `docker compose up -d --build` against the repo’s Compose file (e.g. `compose.yaml` or `docker-compose.yml`).
-- **`make stop`** (alias **`make down`**) — `docker compose down` (containers removed; **volumes kept** by default so DB data survives restarts unless we add a separate `clean` / `down-volumes` target later).
-- **`make restart`** — `stop` then `start`.
-- Optional: **`make logs`** (`compose logs -f`), **`make ps`**, default **`make help`** listing targets.
-
-**Details to decide when implementing**
-
-- **`COMPOSE_FILE`**: default to `compose.yaml` (or `docker-compose.yml`) with `make start COMPOSE_FILE=...` override if needed.
-- **`COMPOSE_PROJECT_NAME`**: e.g. `cafe-review` so container names are stable and predictable (`export` in the Makefile or `name:` in the Compose file).
-- Use **`docker compose`** (v2 plugin), not the deprecated standalone `docker-compose` binary, unless we need a fallback note in the README.
-
-This stays separate from application code: only orchestration convenience, same Compose definition the README would describe anyway.
+- **`make start`** / **`make up`** — `docker compose up -d --build`
+- **`make stop`** / **`make down`** — `docker compose down` (volumes kept)
+- **`make restart`**, **`make logs`**, **`make ps`**, **`make build`**, **`make help`**
+- Override: `make start COMPOSE_FILE=docker-compose.yml`
 
 ## Implementation phases
 
@@ -121,23 +110,23 @@ Use `- [ ]` / `- [x]` in GitHub or your editor to track progress.
 
 ### Repository and layout
 
-- [ ] Monorepo layout agreed (`frontend/`, `backend/`, root `README.md`, optional `compose.yaml`).
-- [ ] `.gitignore` covers Python, Node, env files, IDE noise, and local DB volumes if any.
-- [ ] No secrets committed; `.env.example` lists required variables with placeholder values.
+- [x] Monorepo layout agreed (`frontend/`, `backend/`, root `README.md`, optional `compose.yaml`).
+- [x] `.gitignore` covers Python, Node, env files, IDE noise, and local DB volumes if any.
+- [x] No secrets committed; `.env.example` lists required variables with placeholder values.
 
 ### Database (PostgreSQL)
 
-- [ ] Compose (or local) Postgres service runs with a named volume for data.
-- [ ] `DATABASE_URL` (or equivalent) documented and wired into the API.
+- [x] Compose (or local) Postgres service runs with a named volume for data.
+- [x] `DATABASE_URL` (or equivalent) documented and wired into the API.
 - [ ] `feedback_submissions` table (or chosen name) matches the planned columns; rows persist across API restarts.
 
 ### Backend (FastAPI)
 
-- [ ] App boots with uvicorn; health or root check route for sanity.
+- [x] App boots with uvicorn; health or root check route for sanity.
 - [ ] `POST /api/feedback` accepts JSON body `{ email, comment, rating, highlight }`.
 - [ ] `201` response on success with useful body (e.g. `id`).
 - [ ] ORM/session layer inserts a row and commits; errors handled without leaking stack traces to clients in production-like mode.
-- [ ] Static files: Vite `dist/` mounted/served after build; API routes registered before static + SPA fallback if needed.
+- [x] Static files: Vite `dist/` mounted/served after build; API routes registered before static + SPA fallback if needed.
 
 ### Backend validation and errors
 
@@ -148,7 +137,7 @@ Use `- [ ]` / `- [x]` in GitHub or your editor to track progress.
 
 ### Frontend (React + TypeScript + Vite)
 
-- [ ] Vite React TS project builds without errors (`npm run build`).
+- [x] Vite React TS project builds without errors (`npm run build`).
 - [ ] Form includes all four fields: email, comment, rating (1–5), highlight (single choice of four).
 - [ ] Form submits to the API (relative `/api/...` when same-origin, or configured base URL in dev).
 - [ ] Email required; **regex** validation on the client before submit (per brief).
@@ -164,20 +153,20 @@ Use `- [ ]` / `- [x]` in GitHub or your editor to track progress.
 
 ### Docker and one-command run
 
-- [ ] Multi-stage (or documented) build: frontend `dist/` ends up inside or next to the API image as planned.
-- [ ] `compose.yaml` (or equivalent) defines **app** + **postgres**; app depends on DB healthy/ready where appropriate.
+- [x] Multi-stage (or documented) build: frontend `dist/` ends up inside or next to the API image as planned.
+- [x] `compose.yaml` (or equivalent) defines **app** + **postgres**; app depends on DB healthy/ready where appropriate.
 - [ ] `docker compose up --build` (or `make start`) brings up the full stack; browser can open the app and post feedback.
 
 ### Makefile (optional but planned)
 
-- [ ] Root `Makefile` with `start` / `stop` (and aliases) wrapping `docker compose`.
-- [ ] `make help` documents targets; `COMPOSE_PROJECT_NAME` or Compose `name:` set for stable names.
+- [x] Root `Makefile` with `start` / `stop` (and aliases) wrapping `docker compose`.
+- [x] `make help` documents targets; `COMPOSE_PROJECT_NAME` or Compose `name:` set for stable names.
 
 ### Documentation
 
-- [ ] `README.md`: prerequisites (Docker, Node, Python versions as needed), clone, env copy, **how to start** (Make + raw compose), **how to stop**, default URLs.
-- [ ] Dev workflow documented: same-origin full stack vs Vite dev server + API (including CORS/proxy if used).
-- [ ] This `PLANNING.md` updated if major decisions changed during build.
+- [x] `README.md`: prerequisites (Docker, Node, Python versions as needed), clone, env copy, **how to start** (Make + raw compose), **how to stop**, default URLs.
+- [x] Dev workflow documented: same-origin full stack vs Vite dev server + API (including CORS/proxy if used).
+- [x] This `PLANNING.md` updated if major decisions changed during build.
 
 ### Tests (minimal, purposeful)
 
@@ -206,10 +195,10 @@ Use `- [ ]` / `- [x]` in GitHub or your editor to track progress.
 
 ## Open decisions (resolve during build)
 
-- Exact folder names (`frontend` / `backend` vs `client` / `api`).
+- ~~Exact folder names (`frontend` / `backend` vs `client` / `api`).~~ Resolved: `frontend/`, `backend/`.
 - Dev workflow: Vite proxy vs explicit `VITE_API_URL` when UI and API run on different ports.
 - ORM choice (SQLAlchemy 2.0 is the default pairing with FastAPI in many tutorials).
 
 ---
 
-*Last updated: FastAPI serves SPA build; Compose app + Postgres; Makefile planned; delivery checklist added.*
+*Last updated: Docker multi-stage image, Compose app + Postgres, Makefile, VERSION 0.1.0.*

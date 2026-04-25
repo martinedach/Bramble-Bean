@@ -1,0 +1,13 @@
+.git
+.cursor
+**/__pycache__
+**/*.py[cod]
+**/.venv
+.venv
+.env
+.env.*
+!.env.example
+frontend/node_modules
+frontend/dist
+*.md
+Developer assessment - candidate.docx
