@@ -63,6 +63,7 @@ The repo root **[Makefile](./Makefile)** wraps the same Compose file (`compose.y
 | `make stop` or `make down` | `docker compose down` (volumes kept) |
 | `make restart` | `make stop` then `make start` |
 | `make build` | Build images without starting containers |
+| `make test` | Run backend tests in the running `app` container (`pytest -q`); starts `app`/`db` if needed |
 | `make logs` | Follow logs (`--tail=100`) |
 | `make ps` | List running Compose services |
 | `make down-volumes` | `docker compose down -v` (removes **`pgdata`**; destructive) |
