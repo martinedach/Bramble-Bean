@@ -15,7 +15,7 @@ This repository is being built for a developer assessment. Scope, architecture, 
 
 ## Status
 
-End-to-end **customer feedback** flow: **`POST /api/feedback`** persists to PostgreSQL; the React form validates email (regex), rating (1–5), and highlight (Food / Coffee / Service / Atmosphere), then submits JSON to the API. **`GET /api/health`** remains for checks.
+End-to-end **customer feedback** flow: **`POST /api/feedback`** persists to PostgreSQL; the React form validates email (regex), rating (1–5), and highlight (Food / Coffee / Service / Atmosphere), then submits JSON to the API. Admin view support is now included via **`GET /api/feedback`** (newest-first list with `limit`/`offset` query params). **`GET /api/health`** remains for checks.
 
 Run the full stack with **`docker compose up --build`** (or **`make start`**) and open **http://localhost:8000**.
 
@@ -37,6 +37,7 @@ docker compose up --build
 ```
 
 Then open **http://localhost:8000** for the UI (static build served by FastAPI) and **http://localhost:8000/api/health** for the health JSON.
+Use the header switch (**Customer / Admin**) in the UI to open the admin reviews panel.
 
 PostgreSQL is exposed on **localhost:5432** (user `cafe`, password `cafe`, database `cafe`) for local tools. These credentials are for development only.
 
@@ -63,7 +64,7 @@ The repo root **[Makefile](./Makefile)** wraps the same Compose file (`compose.y
 | `make stop` or `make down` | `docker compose down` (volumes kept) |
 | `make restart` | `make stop` then `make start` |
 | `make build` | Build images without starting containers |
-| `make test` | Run backend tests in the running `app` container (`pytest -q`); starts `app`/`db` if needed |
+| `make test` | Run backend tests in the running `app` container with isolated in-memory SQLite (`pytest -q`); starts `app`/`db` if needed |
 | `make logs` | Follow logs (`--tail=100`) |
 | `make ps` | List running Compose services |
 | `make down-volumes` | `docker compose down -v` (removes **`pgdata`**; destructive) |

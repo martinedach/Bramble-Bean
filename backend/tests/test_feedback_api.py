@@ -206,3 +206,32 @@ def test_create_feedback_db_error_returns_503(monkeypatch) -> None:
 
     assert r.status_code == 503
     assert "temporarily unavailable" in r.json().get("detail", "").lower()
+
+
+def test_list_feedback_returns_newest_first_and_honors_limit() -> None:
+    with TestClient(app) as client:
+        for idx in range(3):
+            created = client.post(
+                "/api/feedback",
+                json={
+                    "email": f"list-order-{idx}@example.com",
+                    "comment": _unique_comment(f"Ordered comment {idx}"),
+                    "rating": 4,
+                    "highlight": "Service",
+                },
+            )
+            assert created.status_code == 201
+
+        listed = client.get("/api/feedback", params={"limit": 2})
+
+    assert listed.status_code == 200
+    body = listed.json()
+    assert isinstance(body, list)
+    assert len(body) == 2
+    assert body[0]["id"] > body[1]["id"]
+
+
+def test_list_feedback_validates_query_params() -> None:
+    with TestClient(app) as client:
+        r = client.get("/api/feedback", params={"limit": 0})
+    assert r.status_code == 422

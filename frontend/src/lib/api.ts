@@ -1,10 +1,11 @@
 import type { FeedbackFieldErrors, FeedbackFieldKey } from './validation'
+import type { FeedbackHighlight } from '../constants/feedback'
 
 export type FeedbackPayload = {
   email: string
   comment: string
   rating: number
-  highlight: string
+  highlight: FeedbackHighlight
 }
 
 export type FeedbackResponseBody = {
@@ -56,6 +57,29 @@ export async function submitFeedback(
   }
 
   return data as FeedbackResponseBody
+}
+
+export async function fetchFeedback(
+  params: { limit?: number; offset?: number } = {},
+): Promise<FeedbackResponseBody[]> {
+  const base = apiBase()
+  const qs = new URLSearchParams()
+  if (typeof params.limit === 'number') qs.set('limit', String(params.limit))
+  if (typeof params.offset === 'number') qs.set('offset', String(params.offset))
+  const suffix = qs.toString() ? `?${qs.toString()}` : ''
+  const res = await fetch(`${base}/api/feedback${suffix}`)
+
+  const text = await res.text()
+  let data: unknown
+  try {
+    data = text ? JSON.parse(text) : null
+  } catch {
+    data = { raw: text }
+  }
+  if (!res.ok) {
+    throw new ApiError(res.status, data)
+  }
+  return Array.isArray(data) ? (data as FeedbackResponseBody[]) : []
 }
 
 type FastApiIssue = {

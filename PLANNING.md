@@ -67,6 +67,12 @@ When the UI is served from the **same origin** as the API (FastAPI serving `dist
 
 Optional later (out of scope unless time): `GET` list for admin — brief does not require it.
 
+**`GET /api/feedback`**
+
+- **Purpose:** Admin review page data source.
+- **Query params:** `limit` (default 50, max 200), `offset` (default 0).
+- **Success:** `200` + list of feedback records, newest first.
+
 ## Validation strategy
 
 | Field | Frontend | Backend |
@@ -207,6 +213,8 @@ Use `- [ ]` / `- [x]` in GitHub or your editor to track progress.
 ## Risks and simplifications
 
 - **Time box**: Skip admin UI, auth, and analytics unless scope expands.
+- **Product completeness decision**: Added a lightweight admin reviews view so the product feels whole for cafe operations, while keeping scope focused.
+- **Auth deliberately omitted**: No authentication/authorization on admin view in this iteration to avoid over-engineering for the assessment; this is a known trade-off and next-step hardening item.
 - **Migrations**: Start simple; add Alembic if we need iterative schema changes with clean history.
 
 ## Open decisions (resolve during build)
@@ -217,4 +225,4 @@ Use `- [ ]` / `- [x]` in GitHub or your editor to track progress.
 
 ---
 
-*Last updated: Checklist completed and release prepared, VERSION 1.0.0.*
+*Last updated: Added admin reviews page + GET feedback endpoint, VERSION 1.1.0.*

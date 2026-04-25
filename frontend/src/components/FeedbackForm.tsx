@@ -58,7 +58,7 @@ export function FeedbackForm() {
         email: email.trim(),
         comment: comment.trim(),
         rating: rating!,
-        highlight: highlight as string,
+        highlight: highlight as FeedbackHighlight,
       })
       setSubmitted(true)
       resetForm()

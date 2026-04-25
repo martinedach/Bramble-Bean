@@ -18,7 +18,7 @@ help:
 	@echo "  make stop          Stop and remove containers (Postgres volume kept)"
 	@echo "  make restart       stop then start"
 	@echo "  make build         Build images only"
-	@echo "  make test          Run backend pytest in running app container"
+	@echo "  make test          Run backend pytest with isolated in-memory test DB"
 	@echo "  make logs          Follow service logs (last 100 lines, then stream)"
 	@echo "  make ps            List compose services"
 	@echo "  make down-volumes  Stop stack and remove named volumes (wipes DB)"
@@ -35,7 +35,7 @@ build:
 test:
 	@$(COMPOSE) -f $(COMPOSE_FILE) ps --status running --services | awk '$$0=="app"{found=1} END{exit found?0:1}' || \
 		$(COMPOSE) -f $(COMPOSE_FILE) up -d app db
-	$(COMPOSE) -f $(COMPOSE_FILE) exec -T app pytest -q
+	$(COMPOSE) -f $(COMPOSE_FILE) exec -T -e DATABASE_URL=sqlite+pysqlite:///:memory: app pytest -q
 
 stop down:
 	$(COMPOSE) -f $(COMPOSE_FILE) down
