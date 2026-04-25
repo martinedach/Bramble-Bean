@@ -15,6 +15,14 @@ const labelClass = 'mb-1 block text-[11px] font-semibold uppercase tracking-wide
 
 const errorClass = 'mt-1 text-[11px] font-medium text-error-red'
 
+function RequiredAsterisk() {
+  return (
+    <span aria-hidden="true" className="ml-1 text-pinterest-red">
+      *
+    </span>
+  )
+}
+
 export function FeedbackForm() {
   const [email, setEmail] = useState('')
   const [comment, setComment] = useState('')
@@ -117,6 +125,7 @@ export function FeedbackForm() {
         <div>
           <label className={labelClass} htmlFor="feedback-email">
             Email
+            <RequiredAsterisk />
           </label>
           <input
             id="feedback-email"
@@ -141,6 +150,7 @@ export function FeedbackForm() {
         <div>
           <label className={labelClass} htmlFor="feedback-comment">
             Tell us about your visit
+            <RequiredAsterisk />
           </label>
           <textarea
             id="feedback-comment"
@@ -162,7 +172,10 @@ export function FeedbackForm() {
         </div>
 
         <div>
-          <span className={labelClass}>Overall rating</span>
+          <span className={labelClass}>
+            Overall rating
+            <RequiredAsterisk />
+          </span>
           <StarRating
             value={rating}
             onChange={setRating}
@@ -178,7 +191,10 @@ export function FeedbackForm() {
         </div>
 
         <div>
-          <span className={labelClass}>What did you enjoy most?</span>
+          <span className={labelClass}>
+            What did you enjoy most?
+            <RequiredAsterisk />
+          </span>
           <HighlightPicker
             value={highlight}
             onChange={setHighlight}
