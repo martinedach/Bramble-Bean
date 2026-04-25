@@ -20,17 +20,21 @@ function renderStars(rating: number) {
 }
 
 export function AdminReviewsPanel() {
+  const pageSize = 20
   const [items, setItems] = useState<FeedbackResponseBody[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [refreshTick, setRefreshTick] = useState(0)
+  const [offset, setOffset] = useState(0)
+  const [hasNextPage, setHasNextPage] = useState(false)
 
   useEffect(() => {
     let active = true
-    fetchFeedback({ limit: 100 })
+    fetchFeedback({ limit: pageSize, offset })
       .then((rows) => {
         if (!active) return
         setItems(rows)
+        setHasNextPage(rows.length === pageSize)
       })
       .catch((err: unknown) => {
         if (!active) return
@@ -46,7 +50,7 @@ export function AdminReviewsPanel() {
     return () => {
       active = false
     }
-  }, [refreshTick])
+  }, [offset, refreshTick])
 
   const total = items.length
   const averageRating = useMemo(() => {
@@ -83,6 +87,7 @@ export function AdminReviewsPanel() {
             onClick={() => {
               setError(null)
               setLoading(true)
+              setOffset(0)
               setRefreshTick((x) => x + 1)
             }}
             className="rounded-pinterest-input border border-warm-silver/60 bg-canvas px-4 py-2 text-[12px] font-semibold text-plum hover:bg-warm-wash"
@@ -131,6 +136,39 @@ export function AdminReviewsPanel() {
           </p>
         </div>
         <p className="text-[12px] text-olive">Newest first</p>
+      </div>
+
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <p className="text-[12px] text-olive">
+          Showing {items.length === 0 ? 0 : offset + 1}-
+          {offset + items.length}
+        </p>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              setError(null)
+              setLoading(true)
+              setOffset((current) => Math.max(0, current - pageSize))
+            }}
+            disabled={loading || offset === 0}
+            className="rounded-pinterest-input border border-warm-silver/60 bg-canvas px-3 py-1.5 text-[12px] font-semibold text-plum hover:bg-warm-wash disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setError(null)
+              setLoading(true)
+              setOffset((current) => current + pageSize)
+            }}
+            disabled={loading || !hasNextPage}
+            className="rounded-pinterest-input border border-warm-silver/60 bg-canvas px-3 py-1.5 text-[12px] font-semibold text-plum hover:bg-warm-wash disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
       </div>
 
       {error ? (
