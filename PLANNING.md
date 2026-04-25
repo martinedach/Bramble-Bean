@@ -88,12 +88,18 @@ Backend remains the source of truth; frontend validation improves UX and satisfi
 
 ## Makefile
 
+**Status:** Implemented and **tracked in git** at the repository root as [`Makefile`](./Makefile) (not a local-only file).
+
 Root **Makefile** wraps Docker Compose (`compose.yaml`, `COMPOSE_PROJECT_NAME=cafe-review`).
 
+- **`make`** / **`make help`** — print targets (default goal)
 - **`make start`** / **`make up`** — `docker compose up -d --build`
 - **`make stop`** / **`make down`** — `docker compose down` (volumes kept)
-- **`make restart`**, **`make logs`**, **`make ps`**, **`make build`**, **`make help`**
+- **`make restart`**, **`make logs`**, **`make ps`**, **`make build`**
+- **`make down-volumes`** — `docker compose down -v` (removes Postgres volume; destructive)
 - Override: `make start COMPOSE_FILE=docker-compose.yml`
+
+README: **[Make commands](./README.md#make-commands)**.
 
 ## Implementation phases
 
@@ -113,6 +119,7 @@ Use `- [ ]` / `- [x]` in GitHub or your editor to track progress.
 - [x] Monorepo layout agreed (`frontend/`, `backend/`, root `README.md`, optional `compose.yaml`).
 - [x] `.gitignore` covers Python, Node, env files, IDE noise, and local DB volumes if any.
 - [x] No secrets committed; `.env.example` lists required variables with placeholder values.
+- [x] Root **Makefile** is version-controlled, documented in **README** (Make commands), and summarized above in this file.
 
 ### Database (PostgreSQL)
 
@@ -157,10 +164,10 @@ Use `- [ ]` / `- [x]` in GitHub or your editor to track progress.
 - [x] `compose.yaml` (or equivalent) defines **app** + **postgres**; app depends on DB healthy/ready where appropriate.
 - [ ] `docker compose up --build` (or `make start`) brings up the full stack; browser can open the app and post feedback.
 
-### Makefile (optional but planned)
+### Makefile
 
-- [x] Root `Makefile` with `start` / `stop` (and aliases) wrapping `docker compose`.
-- [x] `make help` documents targets; `COMPOSE_PROJECT_NAME` or Compose `name:` set for stable names.
+- [x] Root `Makefile` with `start` / `stop` (and aliases) wrapping `docker compose`; **committed to git** and linked from README.
+- [x] `make help` / default `make` documents targets; `COMPOSE_PROJECT_NAME` and Compose `name:` set for stable names.
 
 ### Documentation
 
@@ -201,4 +208,4 @@ Use `- [ ]` / `- [x]` in GitHub or your editor to track progress.
 
 ---
 
-*Last updated: Docker multi-stage image, Compose app + Postgres, Makefile, VERSION 0.1.0.*
+*Last updated: Makefile tracked in git, README Make commands table, VERSION 0.1.1.*

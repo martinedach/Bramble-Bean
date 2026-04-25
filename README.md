@@ -20,6 +20,7 @@ Infra is in place: multi-stage **Dockerfile** (Vite build + FastAPI), **Compose*
 ## Requirements
 
 - [Docker](https://docs.docker.com/get-docker/) with Compose v2 (`docker compose`)
+- [GNU Make](https://www.gnu.org/software/make/) (optional; only if you use the Makefile shortcuts below)
 
 ## Run with Docker Compose
 
@@ -29,25 +30,42 @@ From the repository root:
 docker compose up --build
 ```
 
-Or use the Makefile:
-
-```bash
-make start
-```
-
 Then open **http://localhost:8000** for the UI (static build served by FastAPI) and **http://localhost:8000/api/health** for the health JSON.
 
 PostgreSQL is exposed on **localhost:5432** (user `cafe`, password `cafe`, database `cafe`) for local tools. These credentials are for development only.
 
-Stop the stack:
+Stop the stack (containers removed; **named volume `pgdata` is kept** so the database survives):
 
 ```bash
 docker compose down
-# or
-make stop
 ```
 
-Containers are removed; the named volume **`pgdata`** keeps database data until you remove it with `docker compose down -v`.
+To remove containers **and** volumes (wipe the database):
+
+```bash
+docker compose down -v
+```
+
+## Make commands
+
+The repo root **[Makefile](./Makefile)** wraps the same Compose file (`compose.yaml`, project name `cafe-review`). Run `make` or `make help` to print this list.
+
+| Command | What it does |
+|---------|----------------|
+| `make` / `make help` | Show available targets |
+| `make start` or `make up` | `docker compose up -d --build` |
+| `make stop` or `make down` | `docker compose down` (volumes kept) |
+| `make restart` | `make stop` then `make start` |
+| `make build` | Build images without starting containers |
+| `make logs` | Follow logs (`--tail=100`) |
+| `make ps` | List running Compose services |
+| `make down-volumes` | `docker compose down -v` (removes **`pgdata`**; destructive) |
+
+Override the compose file if needed:
+
+```bash
+make start COMPOSE_FILE=docker-compose.yml
+```
 
 ## Configuration
 
@@ -60,4 +78,4 @@ Copy [`.env.example`](./.env.example) to `.env` when you run the app outside Com
 
 ## Documentation
 
-- [PLANNING.md](./PLANNING.md) — stack rationale, API and data model drafts, Makefile plan, and tickable delivery checklist.
+- [PLANNING.md](./PLANNING.md) — stack rationale, API and data model drafts, Makefile section (git-tracked), and tickable delivery checklist.
