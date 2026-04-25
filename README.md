@@ -8,7 +8,7 @@ This repository is being built for a developer assessment. Scope, architecture, 
 
 | Area | Choice |
 |------|--------|
-| Frontend | React, TypeScript, Vite |
+| Frontend | React, TypeScript, Vite, Tailwind CSS v4 |
 | Backend | FastAPI |
 | Database | PostgreSQL |
 | Delivery | Docker Compose (app + database); FastAPI serves the built SPA for a single-origin setup |
@@ -73,7 +73,7 @@ Copy [`.env.example`](./.env.example) to `.env` when you run the app outside Com
 
 ## Local development (without full Docker)
 
-- **Frontend:** `cd frontend && npm install && npm run dev`
+- **Frontend:** `cd frontend && npm install && npm run dev`. Styling uses **Tailwind v4** with Pinterest-inspired design tokens; see **[frontend/DESIGN_SCHEMA.md](./frontend/DESIGN_SCHEMA.md)** and [`frontend/src/design/schema.ts`](./frontend/src/design/schema.ts).
 - **Backend:** create a virtualenv, `pip install -r backend/requirements.txt`, then from `backend/` run `uvicorn main:app --reload --port 8000`. Without a `static/` folder next to `main.py`, only API routes (for example `/api/health`) are available until you run `npm run build` in `frontend` and copy `frontend/dist` to `backend/static`, or use Docker.
 
 ## Documentation
