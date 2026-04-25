@@ -1,19 +1,19 @@
 import { useState, type FormEvent } from 'react'
 
-import {
-  FEEDBACK_HIGHLIGHTS,
-  RATING_OPTIONS,
-  type FeedbackHighlight,
-} from '../constants/feedback'
+import { type FeedbackHighlight } from '../constants/feedback'
 import { ApiError, parseFastApiFieldErrors, submitFeedback } from '../lib/api'
 import { validateFeedbackForm, type FeedbackFieldErrors } from '../lib/validation'
+import { HighlightPicker } from './HighlightPicker'
+import { StarRating } from './StarRating'
 
 const inputClass =
-  'w-full rounded-pinterest-input border border-warm-silver bg-canvas px-[15px] py-[11px] text-base text-plum shadow-none outline-none transition ' +
-  'focus-visible:ring-2 focus-visible:ring-focus-blue focus-visible:ring-offset-2 focus-visible:ring-offset-canvas ' +
+  'w-full rounded-pinterest-input border border-warm-silver/70 bg-canvas px-[15px] py-[13px] text-base text-plum placeholder:text-warm-silver outline-none transition ' +
+  'focus-visible:border-plum focus-visible:ring-2 focus-visible:ring-focus-blue focus-visible:ring-offset-2 focus-visible:ring-offset-canvas ' +
   'disabled:cursor-not-allowed disabled:opacity-60'
 
-const labelClass = 'mb-1 block text-[12px] font-semibold text-olive'
+const labelClass = 'mb-1.5 block text-[12px] font-semibold uppercase tracking-wide text-olive'
+
+const errorClass = 'mt-1.5 text-[12px] font-medium text-error-red'
 
 export function FeedbackForm() {
   const [email, setEmail] = useState('')
@@ -37,12 +37,7 @@ export function FeedbackForm() {
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setServerMessage(null)
-    const values = {
-      email,
-      comment,
-      rating,
-      highlight,
-    }
+    const values = { email, comment, rating, highlight }
     const clientErrors = validateFeedbackForm(values)
     if (clientErrors) {
       setFieldErrors(clientErrors)
@@ -74,13 +69,27 @@ export function FeedbackForm() {
   if (submitted) {
     return (
       <div
-        className="rounded-pinterest-card border border-warm-silver/60 bg-warm-wash p-6 text-center"
         role="status"
+        className="rounded-pinterest-feature border border-warm-silver/40 bg-canvas p-8 text-center shadow-[0_24px_60px_-30px_rgba(33,25,34,0.25)]"
       >
-        <p className="text-base font-semibold text-green-700">Thanks — your feedback was saved.</p>
+        <div className="mx-auto grid size-14 place-items-center rounded-full bg-warm-wash text-green-700">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="size-7">
+            <path
+              d="M5 12.5l4 4 10-10"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+        <h2 className="mt-4 text-[22px] font-bold tracking-[-0.5px]">Thank you for the visit</h2>
+        <p className="mt-2 text-[14px] text-olive">
+          Your feedback was saved. We will share it with the team.
+        </p>
         <button
           type="button"
-          className="mt-4 rounded-pinterest-input bg-sand-gray px-[14px] py-[6px] text-[12px] font-normal text-ink"
+          className="mt-6 rounded-pinterest-input bg-sand-gray px-5 py-[10px] text-[13px] font-semibold text-ink hover:bg-warm-light"
           onClick={() => setSubmitted(false)}
         >
           Leave another review
@@ -90,124 +99,138 @@ export function FeedbackForm() {
   }
 
   return (
-    <form className="space-y-6" onSubmit={onSubmit} noValidate>
+    <form
+      onSubmit={onSubmit}
+      noValidate
+      className="rounded-pinterest-feature border border-warm-silver/40 bg-canvas p-6 shadow-[0_24px_60px_-30px_rgba(33,25,34,0.25)] sm:p-8"
+    >
       {serverMessage ? (
-        <p className="text-sm text-error-red" role="alert">
+        <div
+          role="alert"
+          className="mb-6 rounded-pinterest-card border border-error-red/30 bg-error-red/5 px-4 py-3 text-[13px] text-error-red"
+        >
           {serverMessage}
-        </p>
+        </div>
       ) : null}
 
-      <div>
-        <label className={labelClass} htmlFor="feedback-email">
-          Email
-        </label>
-        <input
-          id="feedback-email"
-          name="email"
-          type="email"
-          autoComplete="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className={inputClass}
-          aria-invalid={Boolean(fieldErrors.email)}
-          aria-describedby={fieldErrors.email ? 'feedback-email-error' : undefined}
-          disabled={submitting}
-        />
-        {fieldErrors.email ? (
-          <p id="feedback-email-error" className="mt-1 text-[12px] text-error-red">
-            {fieldErrors.email}
-          </p>
-        ) : null}
+      <div className="space-y-6">
+        <div>
+          <label className={labelClass} htmlFor="feedback-email">
+            Email
+          </label>
+          <input
+            id="feedback-email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={inputClass}
+            aria-invalid={Boolean(fieldErrors.email)}
+            aria-describedby={fieldErrors.email ? 'feedback-email-error' : undefined}
+            disabled={submitting}
+          />
+          {fieldErrors.email ? (
+            <p id="feedback-email-error" className={errorClass}>
+              {fieldErrors.email}
+            </p>
+          ) : null}
+        </div>
+
+        <div>
+          <label className={labelClass} htmlFor="feedback-comment">
+            Tell us about your visit
+          </label>
+          <textarea
+            id="feedback-comment"
+            name="comment"
+            rows={4}
+            placeholder="The flat white was just right and the back room felt cosy on a rainy afternoon..."
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            className={`${inputClass} min-h-[140px] resize-y leading-[1.5]`}
+            aria-invalid={Boolean(fieldErrors.comment)}
+            aria-describedby={fieldErrors.comment ? 'feedback-comment-error' : undefined}
+            disabled={submitting}
+          />
+          {fieldErrors.comment ? (
+            <p id="feedback-comment-error" className={errorClass}>
+              {fieldErrors.comment}
+            </p>
+          ) : null}
+        </div>
+
+        <div>
+          <span className={labelClass}>Overall rating</span>
+          <StarRating
+            value={rating}
+            onChange={setRating}
+            disabled={submitting}
+            invalid={Boolean(fieldErrors.rating)}
+            describedBy={fieldErrors.rating ? 'feedback-rating-error' : undefined}
+          />
+          {fieldErrors.rating ? (
+            <p id="feedback-rating-error" className={errorClass}>
+              {fieldErrors.rating}
+            </p>
+          ) : null}
+        </div>
+
+        <div>
+          <span className={labelClass}>What did you enjoy most?</span>
+          <HighlightPicker
+            value={highlight}
+            onChange={setHighlight}
+            disabled={submitting}
+            invalid={Boolean(fieldErrors.highlight)}
+            describedBy={fieldErrors.highlight ? 'feedback-highlight-error' : undefined}
+          />
+          {fieldErrors.highlight ? (
+            <p id="feedback-highlight-error" className={errorClass}>
+              {fieldErrors.highlight}
+            </p>
+          ) : null}
+        </div>
       </div>
 
-      <div>
-        <label className={labelClass} htmlFor="feedback-comment">
-          Your feedback
-        </label>
-        <textarea
-          id="feedback-comment"
-          name="comment"
-          rows={4}
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          className={`${inputClass} min-h-[120px] resize-y`}
-          aria-invalid={Boolean(fieldErrors.comment)}
-          aria-describedby={fieldErrors.comment ? 'feedback-comment-error' : undefined}
-          disabled={submitting}
-        />
-        {fieldErrors.comment ? (
-          <p id="feedback-comment-error" className="mt-1 text-[12px] text-error-red">
-            {fieldErrors.comment}
-          </p>
-        ) : null}
-      </div>
-
-      <div>
-        <label className={labelClass} htmlFor="feedback-rating">
-          Overall rating
-        </label>
-        <select
-          id="feedback-rating"
-          name="rating"
-          value={rating === null ? '' : String(rating)}
-          onChange={(e) => {
-            const v = e.target.value
-            setRating(v === '' ? null : Number(v))
-          }}
-          className={inputClass}
-          aria-invalid={Boolean(fieldErrors.rating)}
-          aria-describedby={fieldErrors.rating ? 'feedback-rating-error' : undefined}
+      <div className="mt-8 flex flex-col items-stretch gap-3 border-t border-warm-silver/30 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-[12px] text-olive">
+          Submissions stay anonymous to other customers.
+        </p>
+        <button
+          type="submit"
+          className={
+            'inline-flex items-center justify-center gap-2 rounded-pinterest-input bg-pinterest-red px-6 py-[12px] text-[13px] font-semibold text-canvas transition ' +
+            'hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-blue focus-visible:ring-offset-2 focus-visible:ring-offset-canvas ' +
+            'disabled:cursor-not-allowed disabled:opacity-70'
+          }
           disabled={submitting}
         >
-          <option value="">Select 1–5</option>
-          {RATING_OPTIONS.map((n) => (
-            <option key={n} value={n}>
-              {n}
-            </option>
-          ))}
-        </select>
-        {fieldErrors.rating ? (
-          <p id="feedback-rating-error" className="mt-1 text-[12px] text-error-red">
-            {fieldErrors.rating}
-          </p>
-        ) : null}
-      </div>
-
-      <fieldset className="space-y-2 border-0 p-0">
-        <legend className={`${labelClass} mb-2`}>What did you enjoy most?</legend>
-        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-          {FEEDBACK_HIGHLIGHTS.map((option) => (
-            <label
-              key={option}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-pinterest-input border border-warm-silver/70 bg-fog px-3 py-2 text-[14px] text-plum has-[:checked]:border-plum has-[:checked]:bg-warm-wash"
-            >
-              <input
-                type="radio"
-                name="highlight"
-                value={option}
-                checked={highlight === option}
-                onChange={() => setHighlight(option)}
-                disabled={submitting}
-                className="size-4 accent-pinterest-red"
+          {submitting ? (
+            <>
+              <span
+                aria-hidden="true"
+                className="size-3 animate-spin rounded-full border-2 border-canvas/40 border-t-canvas"
               />
-              {option}
-            </label>
-          ))}
-        </div>
-        {fieldErrors.highlight ? (
-          <p className="text-[12px] text-error-red" role="alert">
-            {fieldErrors.highlight}
-          </p>
-        ) : null}
-      </fieldset>
-
-      <button
-        type="submit"
-        className="rounded-pinterest-input bg-pinterest-red px-[14px] py-[10px] text-[12px] font-semibold text-ink disabled:opacity-60"
-        disabled={submitting}
-      >
-        {submitting ? 'Sending…' : 'Submit feedback'}
-      </button>
+              Sending
+            </>
+          ) : (
+            <>
+              Submit feedback
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="size-4">
+                <path
+                  d="M5 12h14M13 6l6 6-6 6"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </>
+          )}
+        </button>
+      </div>
     </form>
   )
 }

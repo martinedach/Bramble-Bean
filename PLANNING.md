@@ -208,4 +208,4 @@ Use `- [ ]` / `- [x]` in GitHub or your editor to track progress.
 
 ---
 
-*Last updated: Feedback API + form, Postgres `DATABASE_URL` in Compose, VERSION 0.3.0.*
+*Last updated: Form layout refresh — split-pane hero, star rating control, highlight chips, VERSION 0.3.1.*
