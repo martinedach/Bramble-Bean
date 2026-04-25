@@ -25,7 +25,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: postgresql://cafe:cafe@db:5432/cafe
+      DATABASE_URL: postgresql+psycopg://cafe:cafe@db:5432/cafe
     depends_on:
       db:
         condition: service_healthy
