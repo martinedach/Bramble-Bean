@@ -29,7 +29,7 @@ class FeedbackCreate(BaseModel):
         s = v.strip()
         if not _EMAIL_RE.match(s):
             raise ValueError("invalid email format")
-        return s
+        return s.lower()
 
     @field_validator("comment")
     @classmethod

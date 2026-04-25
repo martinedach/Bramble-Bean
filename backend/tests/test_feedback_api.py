@@ -1,4 +1,7 @@
 from fastapi.testclient import TestClient
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import Session
+from uuid import uuid4
 
 from main import app
 
@@ -11,13 +14,17 @@ def _first_error_for_field(response_json: dict, field: str) -> dict | None:
     return None
 
 
+def _unique_comment(prefix: str) -> str:
+    return f"{prefix} {uuid4().hex[:8]}"
+
+
 def test_create_feedback_returns_201() -> None:
     with TestClient(app) as client:
         r = client.post(
             "/api/feedback",
             json={
                 "email": "patron@example.com",
-                "comment": "Lovely atmosphere and coffee.",
+                "comment": _unique_comment("Lovely atmosphere and coffee."),
                 "rating": 5,
                 "highlight": "Coffee",
             },
@@ -26,7 +33,7 @@ def test_create_feedback_returns_201() -> None:
     data = r.json()
     assert data["id"] >= 1
     assert data["email"] == "patron@example.com"
-    assert data["comment"] == "Lovely atmosphere and coffee."
+    assert "Lovely atmosphere and coffee." in data["comment"]
     assert data["rating"] == 5
     assert data["highlight"] == "Coffee"
     assert "created_at" in data
@@ -143,3 +150,59 @@ def test_create_feedback_comment_whitespace_only_422() -> None:
     err = _first_error_for_field(r.json(), "comment")
     assert err is not None
     assert "empty" in err.get("msg", "").lower()
+
+
+def test_create_feedback_email_is_normalized_to_lowercase() -> None:
+    with TestClient(app) as client:
+        r = client.post(
+            "/api/feedback",
+            json={
+                "email": "  Patron@Example.COM ",
+                "comment": _unique_comment("Great ambiance."),
+                "rating": 4,
+                "highlight": "Atmosphere",
+            },
+        )
+    assert r.status_code == 201
+    data = r.json()
+    assert data["email"] == "patron@example.com"
+
+
+def test_create_feedback_duplicate_submission_returns_409() -> None:
+    payload = {
+        "email": "patron@example.com",
+        "comment": _unique_comment("Lovely atmosphere and coffee."),
+        "rating": 5,
+        "highlight": "Coffee",
+    }
+    with TestClient(app) as client:
+        first = client.post("/api/feedback", json=payload)
+        second = client.post("/api/feedback", json=payload)
+    assert first.status_code == 201
+    assert second.status_code == 409
+    assert "duplicate" in second.json().get("detail", "").lower()
+
+
+def test_create_feedback_db_error_returns_503(monkeypatch) -> None:
+    original_commit = Session.commit
+
+    def raise_db_error(self: Session) -> None:
+        raise SQLAlchemyError("temporary failure")
+
+    monkeypatch.setattr(Session, "commit", raise_db_error)
+    try:
+        with TestClient(app) as client:
+            r = client.post(
+                "/api/feedback",
+                json={
+                    "email": "patron@example.com",
+                    "comment": "Service was excellent.",
+                    "rating": 5,
+                    "highlight": "Service",
+                },
+            )
+    finally:
+        monkeypatch.setattr(Session, "commit", original_commit)
+
+    assert r.status_code == 503
+    assert "temporarily unavailable" in r.json().get("detail", "").lower()
