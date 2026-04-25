@@ -89,3 +89,4 @@ Copy [`.env.example`](./.env.example) to `.env` when you run the app outside Com
 ## Documentation
 
 - [PLANNING.md](./PLANNING.md) — stack rationale, API and data model drafts, Makefile section (git-tracked), and tickable delivery checklist.
+- [NOTES.md](./NOTES.md) — concise AI/process note with manual verification and post-generation refactors.

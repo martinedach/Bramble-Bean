@@ -179,13 +179,13 @@ Use `- [ ]` / `- [x]` in GitHub or your editor to track progress.
 
 - [x] At least one API test: happy path creates a row (or returns 201).
 - [x] At least one API test: missing/invalid field returns expected status and structured error.
-- [ ] Optional: small unit test for email regex or shared validation helper (only if it earns its keep).
+- [x] Optional: small unit test for email regex or shared validation helper (only if it earns its keep). (Covered by expanded backend API validation tests.)
 
 ### Submission and review signals
 
-- [ ] Public GitHub repo contains everything to run and understand the app.
-- [ ] Commit history tells a coherent story (scaffold, feature slices, fixes), not a single monolithic commit.
-- [ ] Short **AI / process note** (`NOTES.md` or README section): tools used, prompts worth keeping, what was manually verified or refactored.
+- [x] Public GitHub repo contains everything to run and understand the app.
+- [x] Commit history tells a coherent story (scaffold, feature slices, fixes), not a single monolithic commit.
+- [x] Short **AI / process note** (`NOTES.md` or README section): tools used, prompts worth keeping, what was manually verified or refactored.
 
 ### Assessment criteria status
 
@@ -217,4 +217,4 @@ Use `- [ ]` / `- [x]` in GitHub or your editor to track progress.
 
 ---
 
-*Last updated: Docker build now gates on frontend checks + backend tests, VERSION 0.3.2.*
+*Last updated: Checklist completed and release prepared, VERSION 1.0.0.*
