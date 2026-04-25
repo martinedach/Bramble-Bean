@@ -19,6 +19,10 @@ End-to-end **customer feedback** flow: **`POST /api/feedback`** persists to Post
 
 Run the full stack with **`docker compose up --build`** (or **`make start`**) and open **http://localhost:8000**.
 
+The app image build now runs verification before it can succeed:
+- Frontend: `npm run lint` and `npm run build`
+- Backend: `pytest`
+
 ## Requirements
 
 - [Docker](https://docs.docker.com/get-docker/) with Compose v2 (`docker compose`)

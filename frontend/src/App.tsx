@@ -12,7 +12,7 @@ function App() {
         className="pointer-events-none absolute -bottom-40 -left-24 size-[460px] rounded-full bg-warm-light/60 blur-3xl"
       />
 
-      <header className="relative z-10 mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-6">
+      <header className="relative z-10 mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
         <div className="flex items-center gap-3">
           <span
             aria-hidden="true"
@@ -46,21 +46,21 @@ function App() {
         </span>
       </header>
 
-      <main className="relative z-10 mx-auto grid w-full max-w-5xl gap-10 px-6 pb-16 pt-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-start lg:gap-14 lg:pt-10">
-        <section className="lg:sticky lg:top-10">
+      <main className="relative z-10 mx-auto grid w-full max-w-5xl gap-8 px-6 pb-8 pt-2 lg:min-h-[calc(100dvh-5.5rem)] lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.1fr)] lg:items-center lg:gap-10 lg:pb-6">
+        <section>
           <span className="inline-flex items-center gap-2 rounded-full border border-warm-silver/60 bg-canvas px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-olive">
             <span className="size-1.5 rounded-full bg-pinterest-red" />
             We are listening
           </span>
-          <h1 className="mt-5 text-[44px] font-semibold leading-[1.05] tracking-[-1.2px] text-plum sm:text-[56px]">
+          <h1 className="mt-4 text-[38px] font-semibold leading-[1.05] tracking-[-1px] text-plum sm:text-[48px]">
             How was the visit?
           </h1>
-          <p className="mt-4 max-w-md text-[15px] leading-[1.6] text-olive">
+          <p className="mt-3 max-w-md text-[14px] leading-[1.55] text-olive">
             Your honest take helps us choose the next bean, perfect the lunch menu,
             and keep the back room as cosy as it should be.
           </p>
 
-          <ul className="mt-8 space-y-4">
+          <ul className="mt-6 space-y-3">
             <li className="flex items-start gap-3">
               <span
                 aria-hidden="true"
@@ -72,7 +72,7 @@ function App() {
               </span>
               <div>
                 <p className="text-[14px] font-semibold text-plum">Rate your visit</p>
-                <p className="text-[13px] leading-[1.5] text-olive">
+                <p className="text-[12px] leading-[1.45] text-olive">
                   One to five stars across food, coffee, service, and atmosphere.
                 </p>
               </div>
@@ -93,7 +93,7 @@ function App() {
               </span>
               <div>
                 <p className="text-[14px] font-semibold text-plum">Tell the story</p>
-                <p className="text-[13px] leading-[1.5] text-olive">
+                <p className="text-[12px] leading-[1.45] text-olive">
                   A sentence or a short paragraph — whatever felt worth sharing.
                 </p>
               </div>
@@ -115,7 +115,7 @@ function App() {
               </span>
               <div>
                 <p className="text-[14px] font-semibold text-plum">Takes about a minute</p>
-                <p className="text-[13px] leading-[1.5] text-olive">
+                <p className="text-[12px] leading-[1.45] text-olive">
                   Four short fields, then you are done.
                 </p>
               </div>

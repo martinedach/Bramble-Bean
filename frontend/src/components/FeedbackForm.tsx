@@ -7,13 +7,13 @@ import { HighlightPicker } from './HighlightPicker'
 import { StarRating } from './StarRating'
 
 const inputClass =
-  'w-full rounded-pinterest-input border border-warm-silver/70 bg-canvas px-[15px] py-[13px] text-base text-plum placeholder:text-warm-silver outline-none transition ' +
+  'w-full rounded-pinterest-input border border-warm-silver/70 bg-canvas px-[14px] py-[10px] text-[15px] text-plum placeholder:text-warm-silver outline-none transition ' +
   'focus-visible:border-plum focus-visible:ring-2 focus-visible:ring-focus-blue focus-visible:ring-offset-2 focus-visible:ring-offset-canvas ' +
   'disabled:cursor-not-allowed disabled:opacity-60'
 
-const labelClass = 'mb-1.5 block text-[12px] font-semibold uppercase tracking-wide text-olive'
+const labelClass = 'mb-1 block text-[11px] font-semibold uppercase tracking-wide text-olive'
 
-const errorClass = 'mt-1.5 text-[12px] font-medium text-error-red'
+const errorClass = 'mt-1 text-[11px] font-medium text-error-red'
 
 export function FeedbackForm() {
   const [email, setEmail] = useState('')
@@ -70,7 +70,7 @@ export function FeedbackForm() {
     return (
       <div
         role="status"
-        className="rounded-pinterest-feature border border-warm-silver/40 bg-canvas p-8 text-center shadow-[0_24px_60px_-30px_rgba(33,25,34,0.25)]"
+        className="rounded-pinterest-feature border border-warm-silver/40 bg-canvas p-6 text-center shadow-[0_24px_60px_-30px_rgba(33,25,34,0.25)]"
       >
         <div className="mx-auto grid size-14 place-items-center rounded-full bg-warm-wash text-green-700">
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="size-7">
@@ -102,18 +102,18 @@ export function FeedbackForm() {
     <form
       onSubmit={onSubmit}
       noValidate
-      className="rounded-pinterest-feature border border-warm-silver/40 bg-canvas p-6 shadow-[0_24px_60px_-30px_rgba(33,25,34,0.25)] sm:p-8"
+      className="rounded-pinterest-feature border border-warm-silver/40 bg-canvas p-5 shadow-[0_24px_60px_-30px_rgba(33,25,34,0.25)] sm:p-6"
     >
       {serverMessage ? (
         <div
           role="alert"
-          className="mb-6 rounded-pinterest-card border border-error-red/30 bg-error-red/5 px-4 py-3 text-[13px] text-error-red"
+          className="mb-4 rounded-pinterest-card border border-error-red/30 bg-error-red/5 px-4 py-2 text-[12px] text-error-red"
         >
           {serverMessage}
         </div>
       ) : null}
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         <div>
           <label className={labelClass} htmlFor="feedback-email">
             Email
@@ -145,11 +145,11 @@ export function FeedbackForm() {
           <textarea
             id="feedback-comment"
             name="comment"
-            rows={4}
+            rows={3}
             placeholder="The flat white was just right and the back room felt cosy on a rainy afternoon..."
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            className={`${inputClass} min-h-[140px] resize-y leading-[1.5]`}
+            className={`${inputClass} min-h-[96px] resize-y leading-[1.45]`}
             aria-invalid={Boolean(fieldErrors.comment)}
             aria-describedby={fieldErrors.comment ? 'feedback-comment-error' : undefined}
             disabled={submitting}
@@ -194,14 +194,14 @@ export function FeedbackForm() {
         </div>
       </div>
 
-      <div className="mt-8 flex flex-col items-stretch gap-3 border-t border-warm-silver/30 pt-6 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-[12px] text-olive">
+      <div className="mt-6 flex flex-col items-stretch gap-2 border-t border-warm-silver/30 pt-4 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-[11px] text-olive">
           Submissions stay anonymous to other customers.
         </p>
         <button
           type="submit"
           className={
-            'inline-flex items-center justify-center gap-2 rounded-pinterest-input bg-pinterest-red px-6 py-[12px] text-[13px] font-semibold text-canvas transition ' +
+            'inline-flex items-center justify-center gap-2 rounded-pinterest-input bg-pinterest-red px-5 py-[10px] text-[12px] font-semibold text-canvas transition ' +
             'hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-blue focus-visible:ring-offset-2 focus-visible:ring-offset-canvas ' +
             'disabled:cursor-not-allowed disabled:opacity-70'
           }

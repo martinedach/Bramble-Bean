@@ -187,6 +187,15 @@ Use `- [ ]` / `- [x]` in GitHub or your editor to track progress.
 - [ ] Commit history tells a coherent story (scaffold, feature slices, fixes), not a single monolithic commit.
 - [ ] Short **AI / process note** (`NOTES.md` or README section): tools used, prompts worth keeping, what was manually verified or refactored.
 
+### Assessment criteria status
+
+- [x] Form runs in a browser and submits to the API.
+- [x] API validates required fields and returns clear errors for invalid/missing input.
+- [x] Email is validated with a frontend regex before submit.
+- [x] Rating is constrained to whole numbers from 1 to 5.
+- [x] Highlight only accepts one of four allowed values.
+- [x] Submissions persist in the configured database.
+
 ## What reviewers asked to see (brief)
 
 - Meaningful **commit history** (logical steps, not one giant dump).
@@ -208,4 +217,4 @@ Use `- [ ]` / `- [x]` in GitHub or your editor to track progress.
 
 ---
 
-*Last updated: Form layout refresh — split-pane hero, star rating control, highlight chips, VERSION 0.3.1.*
+*Last updated: Docker build now gates on frontend checks + backend tests, VERSION 0.3.2.*
